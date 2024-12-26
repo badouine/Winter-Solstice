@@ -2,23 +2,57 @@
 :root {
     /* Dark theme (default) */
     --primary-color: #1a365d;
-    --secondary-color: #346cc0;
-    --accent-color: #bda111;
-    --text-color: #fff;
-    --bg-color: linear-gradient(135deg, #23477a 0%, #19345b 100%);
+    --secondary-color: #2d5a9e;
+    --accent-color: #ffd700;
+    --text-color: #ffffff;  /* Blanc pour le thème sombre */
+    --bg-color: linear-gradient(135deg, #1a365d 0%, #0a192f 100%);
     --section-bg: rgba(255, 255, 255, 0.05);
     --card-border: rgba(255, 255, 255, 0.1);
+    --heading-color: #ffd700;
     
     /* Light theme variables */
     --primary-color-light: #2c5282;
     --secondary-color-light: #4299e1;
     --accent-color-light: #2b6cb0;
-    --text-color-light: #2d3748;
+    --text-color-light: #000000;  /* Noir pour le thème clair */
     --bg-color-light: linear-gradient(135deg, #f7fafc 0%, #e2e8f0 100%);
     --section-bg-light: rgba(255, 255, 255, 0.9);
     --card-border-light: rgba(44, 82, 130, 0.2);
+    --heading-color-light: #2c5282;
     
     --transition-speed: 0.3s;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background: var(--bg-color);
+    transition: background-color var(--transition-speed), 
+                color var(--transition-speed);
+  }
+  
+  body.light-theme {
+    --text-color: var(--text-color-light);
+    --bg-color: var(--bg-color-light);
+    --section-bg: var(--section-bg-light);
+    --card-border: var(--card-border-light);
+    --heading-color: var(--heading-color-light);
+  }
+  
+  /* Assurez-vous que le texte dans les sections hérite de la couleur */
+  section {
+    color: var(--text-color);
+  }
+  
+  /* Ajustement des titres */
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--heading-color);
+  }
+  
+  /* Ajustement pour le texte dans les articles */
+  article p {
+    color: var(--text-color);
   }
   
   /* Reset and Base Styles */
@@ -32,13 +66,23 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: var(--text-color);
-    background: linear-gradient(135deg, #1a365d 0%, #0a192f 100%);
-    color: var(--light-text);
+    background: var(--bg-color);
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+  }
+  
+  body.light-theme {
+    --primary-color: var(--primary-color-light);
+    --secondary-color: var(--secondary-color-light);
+    --accent-color: var(--accent-color-light);
+    --text-color: var(--text-color-light);
+    --bg-color: var(--bg-color-light);
+    --section-bg: var(--section-bg-light);
+    --card-border: var(--card-border-light);
   }
   
   /* Header Styles */
   #main-header {
-    background: rgba(44, 82, 135, 0.95);
+    background: rgba(26, 54, 93, 0.95);
     padding: 1rem;
     position: sticky;
     top: 0;
@@ -94,10 +138,11 @@
     max-width: 1200px;
     margin: 2rem auto;
     padding: 2rem;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--section-bg);
     border-radius: 8px;
-    backdrop-filter: blur(10px);
-    transition: transform var(--transition-speed);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--card-border);
+    transition: transform var(--transition-speed), background-color var(--transition-speed);
   }
   
   section:hover {

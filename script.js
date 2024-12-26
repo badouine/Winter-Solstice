@@ -3,15 +3,68 @@ document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('section');
     const navLinks = document.querySelectorAll('#main-nav a');
 
-    // Smooth scrolling for navigation
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = link.getAttribute('href').slice(1);
-            const targetSection = document.getElementById(targetId);
-            targetSection.scrollIntoView({ behavior: 'smooth' });
-        });
-    });
+  // Smooth scrolling for all navigation links including footer
+  const allNavLinks = [...navLinks, ...document.querySelectorAll('#footer-nav a')];
+    
+  allNavLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetId = link.getAttribute('href').slice(1);
+          
+          if (targetId === 'main-header') {
+              
+              window.scrollTo({
+                  top: 0,
+                  behavior: 'smooth'
+              });
+          } else if (targetId === 'contact') {
+              // "Contact Us", simple modal 
+              const modal = document.createElement('div');
+              modal.style.position = 'fixed';
+              modal.style.top = '50%';
+              modal.style.left = '50%';
+              modal.style.transform = 'translate(-50%, -50%)';
+              modal.style.background = 'var(--section-bg)';
+              modal.style.padding = '2rem';
+              modal.style.borderRadius = '8px';
+              modal.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+              modal.style.zIndex = '1000';
+              modal.innerHTML = `
+                  <h3 style="margin-bottom: 1rem;">Contact Us</h3>
+                  <p>Email: info@wintersolstice.com</p>
+                  <p>Phone: (555) 123-4567</p>
+                  <button style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--accent-color); color: white; border: none; border-radius: 4px; cursor: pointer;">Close</button>
+              `;
+              
+              // Overlay 
+              const overlay = document.createElement('div');
+              overlay.style.position = 'fixed';
+              overlay.style.top = '0';
+              overlay.style.left = '0';
+              overlay.style.right = '0';
+              overlay.style.bottom = '0';
+              overlay.style.background = 'rgba(0, 0, 0, 0.5)';
+              overlay.style.zIndex = '999';
+              
+              document.body.appendChild(overlay);
+              document.body.appendChild(modal);
+              
+              const closeModal = () => {
+                  document.body.removeChild(modal);
+                  document.body.removeChild(overlay);
+              };
+              
+              modal.querySelector('button').addEventListener('click', closeModal);
+              overlay.addEventListener('click', closeModal);
+          } else if (targetId) {
+              //  other links
+              const targetSection = document.getElementById(targetId);
+              if (targetSection) {
+                  targetSection.scrollIntoView({ behavior: 'smooth' });
+              }
+          }
+      });
+  });
 
     // Intersection Observer for section animations
     const observerOptions = {
@@ -149,14 +202,18 @@ document.addEventListener('DOMContentLoaded', () => {
         toggle.style.cursor = 'pointer';
         
         document.body.appendChild(toggle);
-
+    
         let isDark = true;
         toggle.addEventListener('click', () => {
             isDark = !isDark;
-            document.body.style.background = isDark 
-                ? 'linear-gradient(135deg, #324c8a 0%, #0a192f 98%)'
-                : 'linear-gradient(135deg, #87CEEB 0%, #E0F6FF 70%)';
+            // Basculer la classe light-theme sur le body
+            document.body.classList.toggle('light-theme');
+            
+            // Mettre à jour l'icône et le style du bouton
             toggle.innerHTML = isDark ? '☀️' : '🌙';
+            toggle.style.background = isDark 
+                ? 'rgba(255, 255, 255, 0.1)' 
+                : 'rgba(0, 0, 0, 0.1)';
         });
     };
 
