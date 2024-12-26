@@ -218,4 +218,107 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     createThemeToggle();
+
+    // Ajout de l'animation de neige
+    class Snowflake {
+        constructor(canvas) {
+            this.canvas = canvas;
+            this.reset();
+        }
+
+        reset() {
+            this.x = Math.random() * this.canvas.width;
+            this.y = -10;
+            this.size = Math.random() * 3 + 2;
+            this.speed = Math.random() * 1 + 0.5;
+            this.wind = Math.random() * 0.5 - 0.25;
+            this.opacity = Math.random() * 0.5 + 0.5;
+        }
+
+        update() {
+            this.y += this.speed;
+            this.x += this.wind;
+            this.x += Math.sin(this.y / 30) * 0.5;
+
+            if (this.y > this.canvas.height) {
+                this.reset();
+            }
+        }
+
+        draw(ctx) {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+            ctx.fill();
+        }
+    }
+
+    const createSnowfall = () => {
+        const canvas = document.createElement('canvas');
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.zIndex = '1000';
+        document.body.appendChild(canvas);
+
+        const resizeCanvas = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const ctx = canvas.getContext('2d');
+        const snowflakes = Array(50).fill(null).map(() => new Snowflake(canvas));
+        
+        let isSnowing = true;
+        let animationFrame;
+
+        const animate = () => {
+            if (!isSnowing) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            snowflakes.forEach(snowflake => {
+                snowflake.update();
+                snowflake.draw(ctx);
+            });
+
+            animationFrame = requestAnimationFrame(animate);
+        };
+
+        const toggleButton = document.createElement('button');
+        toggleButton.innerHTML = '❄️';
+        toggleButton.style.position = 'fixed';
+        toggleButton.style.bottom = '20px';
+        toggleButton.style.left = '20px';
+        toggleButton.style.padding = '10px';
+        toggleButton.style.borderRadius = '50%';
+        toggleButton.style.border = 'none';
+        toggleButton.style.background = 'rgba(255, 255, 255, 0.1)';
+        toggleButton.style.cursor = 'pointer';
+        toggleButton.style.zIndex = '1001';
+        toggleButton.setAttribute('aria-label', 'Toggle snowfall');
+
+        toggleButton.addEventListener('click', () => {
+            isSnowing = !isSnowing;
+            if (isSnowing) {
+                animate();
+                toggleButton.style.background = 'rgba(255, 255, 255, 0.3)';
+            } else {
+                cancelAnimationFrame(animationFrame);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                toggleButton.style.background = 'rgba(255, 255, 255, 0.1)';
+            }
+        });
+
+        document.body.appendChild(toggleButton);
+        animate();
+    };
+
+    // Démarrer l'animation de neige
+    createSnowfall();
 });
